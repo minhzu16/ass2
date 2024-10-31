@@ -25,5 +25,6 @@ public class main {
         System.out.println("Optimized route (unordered): " + optimizedRoute);
 
         System.out.println("Is the graph directed? " + graph.isDirected());
+
     }
 }
