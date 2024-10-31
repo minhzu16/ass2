@@ -39,5 +39,6 @@ public class main {
         boolean isDirected = graph.isDirected();
         System.out.println("Is the graph directed? " + isDirected);
 
+
     }
 }
