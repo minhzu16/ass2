@@ -16,15 +16,28 @@ public class main {
         List<String> shortestPath = graph.findShortestPath("A", "F");
         System.out.println("Shortest path from A to F: " + shortestPath);
 
-        List<String> orderedPoints = Arrays.asList("A", "C", "E", "F");
-        List<String> optimizedRouteOrdered = graph.optimizeRouteOrdered(orderedPoints);
-        System.out.println("Optimized route (ordered): " + optimizedRouteOrdered);
+        // Tối ưu đường đi giữa nhiều điểm có thứ tự
+        List<String> orderedPoints = Arrays.asList("A", "B", "D", "F");
+        List<String> optimizedOrderedPath = graph.optimizeRouteOrdered(orderedPoints);
+        System.out.println("Optimized ordered path: " + optimizedOrderedPath);
 
-        List<String> points = Arrays.asList("A", "D", "E", "F");
-        List<String> optimizedRoute = graph.optimizeRouteUnordered(points);
-        System.out.println("Optimized route (unordered): " + optimizedRoute);
+        // Tối ưu đường đi giữa nhiều điểm không có thứ tự
+        List<String> unorderedPoints = Arrays.asList("A", "B", "C", "D", "E", "F");
+        List<String> optimizedUnorderedPath = graph.optimizeRouteUnordered(unorderedPoints);
+        System.out.println("Optimized unordered path: " + optimizedUnorderedPath);
 
-        System.out.println("Is the graph directed? " + graph.isDirected());
+        // Kiểm tra vòng lặp trong đường đi
+        List<String> pathWithCircle = Arrays.asList("A", "B", "C", "A");
+        boolean hasCircle = graph.checkCircle(pathWithCircle);
+        System.out.println("Does the path have a circle? " + hasCircle);
+
+        // Kiểm tra trọng số của đường đi
+        int totalWeight = graph.checkSameWeightPath(shortestPath);
+        System.out.println("Total weight of the shortest path: " + totalWeight);
+
+        // Kiểm tra xem đồ thị có phải là 1 chiều hay 2 chiều
+        boolean isDirected = graph.isDirected();
+        System.out.println("Is the graph directed? " + isDirected);
 
     }
 }
