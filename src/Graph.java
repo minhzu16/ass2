@@ -155,8 +155,20 @@ public class Graph {
         return path;
     }
 
+    public int getPathWeight(List<String> path) {
+        int weight = 0;
+        for (int i = 0; i < path.size() - 1; i++) {
+            Vertex v1 = getVertex(path.get(i));
+            Vertex v2 = getVertex(path.get(i + 1));
+            if (v1 != null && v2 != null && v1.adjList.containsKey(v2)) {
+                weight += v1.adjList.get(v2);
+            }
+        }
+        return weight;
+    }
+
     // Finds the vertex with the minimum distance in the set of unvisited vertices
-    private Vertex getMinDistanceVertex(Set<Vertex> unvisited, Map<Vertex, Integer> distances) {
+    public Vertex getMinDistanceVertex(Set<Vertex> unvisited, Map<Vertex, Integer> distances) {
         Vertex minVertex = null;
         int minDistance = Integer.MAX_VALUE;
         for (Vertex vertex : unvisited) {
@@ -169,26 +181,88 @@ public class Graph {
         return minVertex;
     }
 
-    // Nested Vertex class
-    static class Vertex {
-        String label;
-        Map<Vertex, Integer> adjList = new HashMap<>();
+    // Tối ưu đường đi qua nhiều điểm có thứ tự
+    public List<String> optimizeRouteOrdered(List<String> points) {
+        List<String> optimizedRoute = new ArrayList<>();
+        for (int i = 0; i < points.size() - 1; i++) {
+            optimizedRoute.addAll(findShortestPath(points.get(i), points.get(i + 1)));
+        }
+        return optimizedRoute;
+    }
 
-        public Vertex(String label) {
-            this.label = label;
+
+    public List<String> optimizeRouteUnordered(List<String> points) {
+        List<String> bestPath = new ArrayList<>();
+        int bestWeight = Integer.MAX_VALUE;
+
+        // Tạo tất cả các hoán vị của điểm
+        List<List<String>> permutations = generatePermutations(points);
+        for (List<String> permutation : permutations) {
+            int currentWeight = 0;
+            List<String> currentPath = new ArrayList<>();
+            for (int i = 0; i < permutation.size() - 1; i++) {
+                List<String> pathSegment = findShortestPath(permutation.get(i), permutation.get(i + 1));
+                currentPath.addAll(pathSegment);
+                currentWeight += getPathWeight(pathSegment);
+            }
+
+            if (currentWeight < bestWeight) {
+                bestWeight = currentWeight;
+                bestPath = new ArrayList<>(currentPath);
+            }
         }
 
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (obj == null || getClass() != obj.getClass()) return false;
-            Vertex vertex = (Vertex) obj;
-            return Objects.equals(label, vertex.label);
-        }
+        return bestPath;
+    }
 
-        @Override
-        public int hashCode() {
-            return Objects.hash(label);
+    // Hàm sinh các hoán vị của một danh sách điểm
+    public List<List<String>> generatePermutations(List<String> points) {
+        List<List<String>> permutations = new ArrayList<>();
+        permute(points, 0, permutations);
+        return permutations;
+    }
+
+    public void permute(List<String> points, int start, List<List<String>> result) {
+        if (start == points.size() - 1) {
+            result.add(new ArrayList<>(points));
+        } else {
+            for (int i = start; i < points.size(); i++) {
+                Collections.swap(points, i, start);
+                permute(points, start + 1, result);
+                Collections.swap(points, i, start);
+            }
         }
     }
+    
+    
+    // Hàm kiểm tra vòng lặp trên đường đi đã đi
+    public boolean checkCircle(List<String> path) {
+        Set<String> visited = new HashSet<>();
+        for (String point : path) {
+            if (!visited.add(point)) {
+                return true; // Có vòng lặp
+            }
+        }
+        return false;
+    }
+
+    // Hàm kiểm tra đường có cùng trọng số (tổng trọng số ngắn nhất)
+    public int checkSameWeightPath(List<String> path) {
+        return getPathWeight(path); // Trả về tổng trọng số của đường đi
+    }
+
+
+    // Kiểm tra đồ thị có hướng hay vô hướng
+    public boolean isDirected() {
+        for (Vertex v : vertices) {
+            for (Map.Entry<Vertex, Integer> edge : v.adjList.entrySet()) {
+                Vertex neighbor = edge.getKey();
+                if (!neighbor.adjList.containsKey(v) || !neighbor.adjList.get(v).equals(edge.getValue())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }

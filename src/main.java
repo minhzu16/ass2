@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.List;
 
 public class main {
@@ -14,5 +15,15 @@ public class main {
 
         List<String> shortestPath = graph.findShortestPath("A", "F");
         System.out.println("Shortest path from A to F: " + shortestPath);
+
+        List<String> orderedPoints = Arrays.asList("A", "C", "E", "F");
+        List<String> optimizedRouteOrdered = graph.optimizeRouteOrdered(orderedPoints);
+        System.out.println("Optimized route (ordered): " + optimizedRouteOrdered);
+
+        List<String> points = Arrays.asList("A", "D", "E", "F");
+        List<String> optimizedRoute = graph.optimizeRouteUnordered(points);
+        System.out.println("Optimized route (unordered): " + optimizedRoute);
+
+        System.out.println("Is the graph directed? " + graph.isDirected());
     }
 }
