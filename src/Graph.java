@@ -76,7 +76,7 @@ public class Graph {
         }
 
         System.out.print("   ");
-        for (Vertex vertex : this.vertices) System.out.print(vertex.label + " ");
+        for (Vertex vertex : this.vertices) System.out.print(vertex.label + "  ");
         System.out.println();
 
         for (int i = 0; i < n; i++) {
