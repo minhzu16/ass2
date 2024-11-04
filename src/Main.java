@@ -1,11 +1,33 @@
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Choose mode:");
+        System.out.println("1. Interactive Menu");
+        System.out.println("2. Run Demo");
+        System.out.print("Enter choice (1 or 2): ");
+
+        int choice = scanner.nextInt();
+        if (choice == 1) {
+            // Run interactive menu
+            Menu menu = new Menu();
+            menu.start();
+        } else if (choice == 2) {
+            // Run demo code
+            runDemo();
+        } else {
+            System.out.println("Invalid choice. Exiting...");
+        }
+        scanner.close();
+    }
+
+    private static void runDemo() {
         Graph graph = new Graph();
 
-        // Thêm các cạnh cho các điểm A - Z
+        // Add edges for points A - Z
         graph.addEdge("A", "B", 5);
         graph.addEdge("A", "C", 10);
         graph.addEdge("B", "C", 2);
@@ -35,39 +57,46 @@ public class Main {
         graph.addEdge("X", "Y", 8);
         graph.addEdge("Y", "Z", 3);
 
-        // Tìm đường đi ngắn nhất từ A đến Z
-        List<String> shortestPath = graph.findShortestPath("A", "Y");
-        System.out.println("Shortest path from A to Y: " + shortestPath);
+        System.out.println("\n=== Demo Results ===\n");
+
+        // Display graph structure
+        System.out.println("Graph as Adjacency Matrix:");
+        graph.displayMatrix();
+        System.out.println("\nGraph as Adjacency List:");
+        graph.display();
         System.out.println();
 
-        // Kiểm tra trọng số của đường đi
+        // Find shortest path from A to Y
+        List<String> shortestPath = graph.findShortestPath("A", "Y");
+        System.out.println("Shortest path from A to Y: " + shortestPath);
         int totalWeight = graph.getPathWeight(shortestPath);
         System.out.println("Total weight of the shortest path: " + totalWeight);
         System.out.println();
 
-        // Tối ưu đường đi giữa nhiều điểm có thứ tự
+        // Optimize ordered route
         List<String> orderedPoints = Arrays.asList("A", "B", "D", "F");
         Pair<List<String>, Integer> optimizedOrderedResult = graph.optimizeRouteOrdered(orderedPoints);
-        System.out.println("Optimized ordered path: " + optimizedOrderedResult.getKey());
+        System.out.println("Optimized ordered path through " + orderedPoints + ": " +
+                optimizedOrderedResult.getKey());
         System.out.println("Total weight of ordered path: " + optimizedOrderedResult.getValue());
         System.out.println();
 
-        // Tối ưu đường đi giữa nhiều điểm không có thứ tự
+        // Optimize unordered route
         List<String> unorderedPoints = Arrays.asList("A", "B", "C", "D", "E", "F");
         Pair<List<String>, Integer> optimizedUnorderedResult = graph.optimizeRouteUnordered(unorderedPoints);
-        System.out.println("Optimized unordered path: " + optimizedUnorderedResult.getKey());
+        System.out.println("Optimized unordered path through " + unorderedPoints + ": " +
+                optimizedUnorderedResult.getKey());
         System.out.println("Total weight of unordered path: " + optimizedUnorderedResult.getValue());
         System.out.println();
 
-        // Kiểm tra vòng lặp trong đường đi
+        // Check for circle in path
         List<String> pathWithCircle = Arrays.asList("A", "B", "C", "A");
         boolean hasCircle = graph.checkCircle(pathWithCircle);
-        System.out.println("Does the ( A-B-C-A ) path have a circle? " + hasCircle);
+        System.out.println("Does the path A-B-C-A have a circle? " + hasCircle);
         System.out.println();
 
-        // Kiểm tra xem đồ thị có phải là 1 chiều hay 2 chiều
+        // Check if graph is directed
         boolean isDirected = graph.isDirected();
         System.out.println("Is the graph directed? " + isDirected);
-        System.out.println();
     }
 }
