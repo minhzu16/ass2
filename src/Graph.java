@@ -182,29 +182,32 @@ public class Graph {
     }
 
     // Tối ưu đường đi qua nhiều điểm có thứ tự
-    public List<String> optimizeRouteOrdered(List<String> points) {
+    public Pair<List<String>, Integer> optimizeRouteOrdered(List<String> points) {
         List<String> optimizedRoute = new ArrayList<>();
+
         for (int i = 0; i < points.size() - 1; i++) {
-            optimizedRoute.addAll(findShortestPath(points.get(i), points.get(i + 1)));
+            List<String> pathSegment = findShortestPath(points.get(i), points.get(i + 1));
+            optimizedRoute.addAll(pathSegment);
         }
-        return optimizedRoute;
+
+        int totalWeight = getPathWeight(optimizedRoute);
+        return new Pair<>(optimizedRoute, totalWeight);
     }
 
-
-    public List<String> optimizeRouteUnordered(List<String> points) {
+    public Pair<List<String>, Integer> optimizeRouteUnordered(List<String> points) {
         List<String> bestPath = new ArrayList<>();
         int bestWeight = Integer.MAX_VALUE;
 
         // Tạo tất cả các hoán vị của điểm
         List<List<String>> permutations = generatePermutations(points);
         for (List<String> permutation : permutations) {
-            int currentWeight = 0;
             List<String> currentPath = new ArrayList<>();
             for (int i = 0; i < permutation.size() - 1; i++) {
                 List<String> pathSegment = findShortestPath(permutation.get(i), permutation.get(i + 1));
                 currentPath.addAll(pathSegment);
-                currentWeight += getPathWeight(pathSegment);
             }
+
+            int currentWeight = getPathWeight(currentPath);
 
             if (currentWeight < bestWeight) {
                 bestWeight = currentWeight;
@@ -212,8 +215,9 @@ public class Graph {
             }
         }
 
-        return bestPath;
+        return new Pair<>(bestPath, bestWeight);
     }
+
 
     // Hàm sinh các hoán vị của một danh sách điểm
     public List<List<String>> generatePermutations(List<String> points) {
