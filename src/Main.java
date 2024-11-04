@@ -62,7 +62,7 @@ public class Main {
         // Kiểm tra vòng lặp trong đường đi
         List<String> pathWithCircle = Arrays.asList("A", "B", "C", "A");
         boolean hasCircle = graph.checkCircle(pathWithCircle);
-        System.out.println("Does the path have a circle? " + hasCircle);
+        System.out.println("Does the ( A-B-C-A ) path have a circle? " + hasCircle);
         System.out.println();
 
         // Kiểm tra xem đồ thị có phải là 1 chiều hay 2 chiều
